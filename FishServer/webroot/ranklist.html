@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>排行榜</title>
+    <script type="text/javascript" src='./js/flexible.js'></script>
+    <script src="//cdn.bootcss.com/jquery/1.7.1/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        html {
+            font-size: 128px;
+        }
+
+        body {
+            background: #001d31;
+            color: #fff;
+            font-size: .25rem;
+        }
+
+        body b {
+            color: #00A5E3
+        }
+
+        img {
+            vertical-align: middle;
+            max-width: 100%;
+        }
+
+        .rank-list {
+            padding: 10px;
+            font-size: .3rem;
+        }
+
+        .rank-list .rl-item:nth-child(1),
+        .rank-list .rl-item:nth-child(2),
+        .rank-list .rl-item:nth-child(3) {
+            background: #775ADB;
+        }
+
+        .rl-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #066cb0;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .avatar img {
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .rl-item div {
+            min-width: 12%;
+            padding: 0 10px;
+            line-height: 40px;
+            text-align: center;
+        }
+
+        .rl-item .fl-item {
+            text-align: left;
+        }
+
+        .ui-flexbox {
+            display: -moz-box;
+            -moz-box-orient: vertical;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            display: -ms-flexbox;
+            -ms-flex-direction: row;
+            display: -webkit-flex;
+            -webkit-flex-direction: row;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .fl-item {
+            -webkit-flex: 1;
+            flex: 1;
+            text-align: left;
+            padding: 10px;
+            background: #001d30;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .vip-level img {
+            height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="rank-list">
+</div>
+<script>
+    //获取url中的参数
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+    }
+    function convert_exp_to_level(exp) {
+        var exp_list = [0, 5, 20, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200, 102400,
+            200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000,
+            1200000, 1300000, 1400000, 1500000, 1600000];
+        var start = 0;
+        var level = -1;
+        for (var i = 0; i < exp_list.length; ++i) {
+            if (start <= exp && exp < exp_list[i]) {
+                level = i;
+                break;
+            }
+            start = exp_list[i];
+        }
+        if (level == -1) {
+            level = exp_list.length;
+        }
+        return level;
+    }
+
+    var url = getUrlParam('http_game');
+    var session = getUrlParam('session');
+    var uid = parseInt(getUrlParam('userId'));
+    $.ajax({
+        type: "post",
+        url: url + '/v1/game/rank_list',
+        data: JSON.stringify({userId: uid, gameId: 2, session: session}),
+        success: function (data, textStatus) {
+            var html = '';
+            if (data.chip) {
+                var rank_list = data.chip;
+                for (var i = 0; i < rank_list.length; ++i) {
+                    var info = JSON.parse(rank_list[i]);
+                    html += '<div class="rl-item ui-flexbox">';
+                    if (i < 3) {
+                        html += '<div class="num"><img src="images/rank' + (i + 1) + '.png" width="42" alt=""></div>';
+                    }
+                    else {
+                        html += '<div class="num">' + (i + 1) + '</div>';
+                    }
+                    if (info['sex'] == 0) {
+                        html += '<div class="avatar"><img src="images/man.png" alt="" width="40"></div>';
+                    }else {
+                        html += '<div class="avatar"><img src="images/woman.png" alt="" width="40"></div>';
+                    }
+                    if (info['vip'] > 0) {
+                        html += '<div class="vip-level"><img src="images/VIP' + info['vip'] + '.png" alt=""></div>';
+                    }
+                    else {
+                        html += '<div class="vip-level"></div>';
+                    }
+                    html += '<div class="name">' + info['nick'] + '</div>';
+                    html += '<div class="level"><img src="images/lvdot.png" alt="" width="29">' + convert_exp_to_level(info['exp']) + '</div>';
+                    html += '<div class="fl-item"> 拥有金币 <img src="images/icongold.png" width="22" alt=""> ' + info['chip'] + ' </div>';
+                    html += '</div>';
+                }
+            }
+            $(".rank-list").html(html);
+        }
+    });
+</script>
+</body>
+</html>

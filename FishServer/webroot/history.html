@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>历史记录</title>
+    <script type="text/javascript" src='./js/flexible.js'></script>
+    <script src="//cdn.bootcss.com/jquery/1.7.1/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        html {
+            font-size: 128px;
+        }
+
+        body {
+            background: #001d31;
+            color: #fff;
+            font-size: .25rem;
+        }
+
+        img {
+            vertical-align: middle;
+            max-width: 100%;
+        }
+
+        .history-cont table {
+            text-align: center;
+            width: 100%;
+            font: 300 .3rem/2 arial;
+
+        }
+
+        .history-cont th {
+            color: #d6d43c;
+            line-height: 3;
+            border-bottom: 1px solid #04416e;
+        }
+
+    </style>
+</head>
+<body>
+<div class="history-cont">
+    <table>
+        <thead>
+        <tr>
+            <th>兑换物品</th>
+            <th>消耗话费券</th>
+            <th>时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script>
+    //获取url中的参数
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+    function to_ymd(ts) {
+        var date = new Date(ts);
+        var Y = date.getFullYear();
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+        var D = date.getDate();
+        return Y + '-' + M + '-' + D;
+    }
+    var url = getUrlParam('http_game');
+    var session = getUrlParam('session');
+    var uid = parseInt(getUrlParam('userId'));
+    $.ajax({
+        type: "post",
+        url: url + '/v1/game/history',
+        data: JSON.stringify({userId: uid, gameId: 2, session: session}),
+        success: function (data, textStatus) {
+            var html = '';
+            if (data.exchange) {
+                var exchange_list = data.exchange;
+                for (var i = 0; i < exchange_list.length; ++i) {
+                    html += '<tr>';
+                    html += '<td>' + exchange_list[i]['desc'] + '<td/>';
+                    html += '<td>' + exchange_list[i]['cost'] + '张<td/>';
+                    html += '<td>' + to_ymd(exchange_list[i]['desc']) + '<td/>';
+                    html += '<tr/>';
+                }
+            }
+            $("table tbody").html(html);
+        }
+    });
+</script>
+</body>
+</html>

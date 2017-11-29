@@ -1,0 +1,11 @@
+Twisted
+autobahn
+hiredis
+pycrypto
+pyOpenSSL
+redis
+service-identity
+txredis
+txredisapi
+xmltodict
+cffi

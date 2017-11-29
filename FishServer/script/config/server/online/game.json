@@ -1,0 +1,41 @@
+{
+    "name": "fish",
+    "mode": 1,
+    "http.port": 8080,
+    "tcp.port": 9000,
+    "http.sdk": "http://123.57.13.180:8080",
+    "http.game": "http://123.57.13.180:9006",
+    "debug": ["redis", "network", "debug"],
+    "servers": {
+        "fish-1": {"internet": "123.57.13.180", "intranet": "10.171.57.54"}
+    },
+    "config.file": "config/default.py",
+    "startup": ["game", "quick", "connect", "http", "entity"],
+    "process": [
+        {"type": "shell", "id": 100, "server": "fish-1", "desc": "web shell server"},
+        {"type": "quick", "id": 200, "server": "fish-1", "desc": "quick start server"},
+        {"type": "entity", "id": 300, "server": "fish-1", "desc": "entity server"},
+        {"type": "http", "id": 400, "server": "fish-1", "desc": "http server"},
+        {"type": "connect", "id": 1000, "server": "fish-1", "desc": "connect server"},
+        {"type": "game", "id": 20000, "server": "fish-1", "desc": "game server"},
+        {"type": "game", "id": 20002, "server": "fish-1", "desc": "game server"},
+        {"type": "game", "id": 20004, "server": "fish-1", "desc": "game server"}
+    ],
+    "redis": {
+        "config": {"host": "10.51.120.252", "port": 6379, "db": 0},
+        "cluster": [
+            {"host": "10.51.120.252", "port": 6380, "db": 0},
+            {"host": "10.51.120.252", "port": 6381, "db": 0},
+            {"host": "10.51.120.252", "port": 6382, "db": 0},
+            {"host": "10.51.120.252", "port": 6383, "db": 0},
+            {"host": "10.51.120.252", "port": 6384, "db": 0},
+            {"host": "10.51.120.252", "port": 6385, "db": 0},
+            {"host": "10.51.120.252", "port": 6386, "db": 0},
+            {"host": "10.51.120.252", "port": 6387, "db": 0}
+        ],
+        "mix": {"host": "10.51.120.252", "port": 6400, "db": 0},
+        "pay": {"host": "10.51.120.252", "port": 6401, "db": 0},
+        "stat": {"host": "10.51.120.252", "port": 6402, "db": 0},
+        "cache": {"host": "10.51.120.252", "port": 6403, "db": 0}
+    }
+}

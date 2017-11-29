@@ -1,0 +1,32 @@
+{
+    "name": "fish",
+    "mode": 3,
+    "http.port": 18080,
+    "tcp.port": 19000,
+    "http.sdk": "http://sdk.fish.yisilong.tk",
+    "http.game": "http://http.fish.yisilong.tk",
+    "debug": ["redis", "network", "debug"],
+    "servers": {
+        "fish-1": {"internet": "118.244.224.51", "intranet": "127.0.0.1"}
+    },
+    "config.file": "config/default.py",
+    "startup": ["shell"],
+    "process": [
+        {"type": "shell", "id": 100, "server": "fish-1", "desc": "web shell server"},
+        {"type": "quick", "id": 200, "server": "fish-1", "desc": "quick start server"},
+        {"type": "entity", "id": 300, "server": "fish-1", "desc": "entity server"},
+        {"type": "http", "id": 400, "server": "fish-1", "desc": "http server"},
+        {"type": "connect", "id": 1000, "server": "fish-1", "desc": "connect server"},
+        {"type": "game", "id": 20000, "server": "fish-1", "desc": "game server"}
+    ],
+    "redis": {
+        "config": {"host": "127.0.0.1", "port": 16379, "db": 12},
+        "mix": {"host": "127.0.0.1", "port": 16379, "db": 1},
+        "cluster": [
+            {"host": "127.0.0.1", "port": 16379, "db": 2}
+        ],
+        "pay": {"host": "127.0.0.1", "port": 16379, "db": 3},
+        "stat": {"host": "127.0.0.1", "port": 16379, "db": 4},
+        "cache": {"host": "127.0.0.1", "port": 16379, "db": 5}
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "fish",
+    "mode": 2,
+    "http.port": 8080,
+    "tcp.port": 9000,
+    "http.sdk": "http://121.42.186.178:8080",
+    "http.game": "http://121.42.186.178:9006",
+    "game.list": [2],
+    "debug": ["redis", "network", "debug"],
+    "servers": {
+        "fish-1": {"internet": "121.42.186.178", "intranet": "10.251.52.165"}
+    },
+    "config.file": "config/default.py",
+    "startup": ["sdk"],
+    "process": [
+        {"type": "sdk", "id": 80, "server": "fish-1", "desc": "sdk server"}
+    ],
+    "redis": {
+        "config": {"host": "127.0.0.1", "port": 6379, "db": 11},
+        "mix": {"host": "127.0.0.1", "port": 6379, "db": 1},
+        "cluster": [
+            {"host": "127.0.0.1", "port": 6379, "db": 2}
+        ],
+        "pay": {"host": "127.0.0.1", "port": 6379, "db": 3},
+        "stat": {"host": "127.0.0.1", "port": 6379, "db": 4},
+        "cache": {"host": "127.0.0.1", "port": 6379, "db": 5}
+    }
+}
